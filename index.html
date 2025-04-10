@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kids Drawing App</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: #fffcf0;
+    }
+    #canvas-container {
+      position: relative;
+      border: 2px solid #555;
+    }
+    canvas {
+      position: absolute;
+      left: 0;
+      top: 0;
+      cursor: crosshair;
+    }
+    img {
+      display: block;
+      max-width: 100%;
+    }
+    .controls {
+      margin-top: 10px;
+    }
+    .controls input, .controls button {
+      margin-right: 10px;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎨 Draw on the Image!</h1>
+
+  <div class="controls">
+    <label for="color">Color:</label>
+    <input type="color" id="color" value="#000000" />
+    <button onclick="clearCanvas()">Clear Drawing</button>
+  </div>
+
+  <div id="canvas-container">
+    <img id="bg-image" src="k.jpg" alt="Animal Image" />
+    <canvas id="drawing-canvas"></canvas>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('drawing-canvas');
+    const ctx = canvas.getContext('2d');
+    const img = document.getElementById('bg-image');
+    const colorPicker = document.getElementById('color');
+
+    let drawing = false;
+
+    img.onload = () => {
+      canvas.width = img.width;
+      canvas.height = img.height;
+    };
+
+    function startDraw(e) {
+      drawing = true;
+      ctx.beginPath();
+      ctx.moveTo(getX(e), getY(e));
+    }
+
+    function draw(e) {
+      if (!drawing) return;
+      ctx.strokeStyle = colorPicker.value;
+      ctx.lineWidth = 3;
+      ctx.lineCap = 'round';
+      ctx.lineTo(getX(e), getY(e));
+      ctx.stroke();
+    }
+
+    function stopDraw() {
+      drawing = false;
+    }
+
+    function getX(e) {
+      return e.touches ? e.touches[0].clientX - canvas.getBoundingClientRect().left : e.offsetX;
+    }
+
+    function getY(e) {
+      return e.touches ? e.touches[0].clientY - canvas.getBoundingClientRect().top : e.offsetY;
+    }
+
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    canvas.addEventListener('mousedown', startDraw);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDraw);
+    canvas.addEventListener('mouseout', stopDraw);
+
+    canvas.addEventListener('touchstart', startDraw);
+    canvas.addEventListener('touchmove', draw);
+    canvas.addEventListener('touchend', stopDraw);
+  </script>
+</body>
+</html>
