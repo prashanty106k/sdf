@@ -17,6 +17,7 @@
     #canvas-container {
       position: relative;
       border: 2px solid #555;
+      margin-top: 10px;
     }
     canvas {
       position: absolute;
@@ -35,6 +36,23 @@
       margin-right: 10px;
       font-size: 1rem;
     }
+    .image-scroll {
+      display: flex;
+      overflow-x: auto;
+      margin-top: 20px;
+      gap: 10px;
+      padding: 10px;
+      width: 100%;
+      max-width: 500px;
+    }
+    .image-scroll img {
+      height: 80px;
+      cursor: pointer;
+      border: 2px solid transparent;
+    }
+    .image-scroll img.selected {
+      border-color: #f00;
+    }
   </style>
 </head>
 <body>
@@ -46,8 +64,14 @@
     <button onclick="clearCanvas()">Clear Drawing</button>
   </div>
 
+  <div class="image-scroll" id="image-scroll">
+    <img src="k.jpg" class="thumb selected" />
+    <img src="kh.png" class="thumb" />
+    <img src="https://i.imgur.com/ZcLLrkY.png" class="thumb" />
+  </div>
+
   <div id="canvas-container">
-    <img id="bg-image" src="k.jpg" alt="Animal Image" />
+    <img id="bg-image" src="https://i.imgur.com/0DElr0H.png" alt="Animal Image" />
     <canvas id="drawing-canvas"></canvas>
   </div>
 
@@ -56,13 +80,16 @@
     const ctx = canvas.getContext('2d');
     const img = document.getElementById('bg-image');
     const colorPicker = document.getElementById('color');
+    const thumbs = document.querySelectorAll('.thumb');
 
     let drawing = false;
 
-    img.onload = () => {
+    function resizeCanvas() {
       canvas.width = img.width;
       canvas.height = img.height;
-    };
+    }
+
+    img.onload = resizeCanvas;
 
     function startDraw(e) {
       drawing = true;
@@ -73,7 +100,7 @@
     function draw(e) {
       if (!drawing) return;
       ctx.strokeStyle = colorPicker.value;
-      ctx.lineWidth = 3;
+      ctx.lineWidth = 6; // thicker line
       ctx.lineCap = 'round';
       ctx.lineTo(getX(e), getY(e));
       ctx.stroke();
@@ -103,6 +130,15 @@
     canvas.addEventListener('touchstart', startDraw);
     canvas.addEventListener('touchmove', draw);
     canvas.addEventListener('touchend', stopDraw);
+
+    thumbs.forEach(thumb => {
+      thumb.addEventListener('click', () => {
+        document.querySelector('.thumb.selected').classList.remove('selected');
+        thumb.classList.add('selected');
+        img.src = thumb.src;
+        clearCanvas();
+      });
+    });
   </script>
 </body>
 </html>
