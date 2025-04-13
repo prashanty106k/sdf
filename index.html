@@ -29,6 +29,7 @@
       cursor: crosshair;
       width: 100%;
       height: 100%;
+      touch-action: none;
     }
     #bg-image {
       display: block;
@@ -83,13 +84,12 @@
     <img src="gh.jpg" class="thumb" />
     <img src="ch.jpg" class="thumb" />
     <img src="chatri.jpg" class="thumb" />
-    <img src="jh.webp" class="thumb" />
+    <img src="jh.jpg" class="thumb" />
     <img src="t.jpg" class="thumb" />
     <img src="tha.jpeg" class="thumb" />
     <img src="d.jpeg" class="thumb" />
     <img src="dh.jpeg" class="thumb" />
     <img src="ban.png" class="thumb" />
-    <img src="d.jpeg" class="thumb" />
     <img src="thumb.jpeg" class="thumb" />
     <img src="door.jpg" class="thumb" />
     <img src="bow.jpeg" class="thumb" />
@@ -186,6 +186,20 @@
         clearCanvas();
       });
     });
+    canvas.addEventListener('touchstart', (e) => {
+  e.preventDefault();
+  startDraw(e);
+}, { passive: false });
+
+canvas.addEventListener('touchmove', (e) => {
+  e.preventDefault();
+  draw(e);
+}, { passive: false });
+
+canvas.addEventListener('touchend', (e) => {
+  e.preventDefault();
+  stopDraw();
+}, { passive: false });
   </script>
 </body>
 </html>
